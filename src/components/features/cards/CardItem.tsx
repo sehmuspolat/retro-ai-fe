@@ -6,7 +6,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import { Card } from '@/types';
-import { useAiStore } from '@/store/useAiStore';
+import { useUiStore } from '@/store/useUiStore';
 import { AudioPlayer } from '../media/AudioPlayer';
 
 interface CardItemProps {
@@ -14,8 +14,7 @@ interface CardItemProps {
 }
 
 export const CardItem: React.FC<CardItemProps> = ({ card }) => {
-  const { analyzeCardAndSuggest, isAnalyzingCardId } = useAiStore();
-  const isAnalyzing = isAnalyzingCardId === card.id;
+  const { openActionDrawer } = useUiStore();
 
   const {
     attributes,
@@ -35,7 +34,7 @@ export const CardItem: React.FC<CardItemProps> = ({ card }) => {
 
   const handleAnalyzeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    analyzeCardAndSuggest(card);
+    openActionDrawer(card);
   };
 
   return (
@@ -49,8 +48,8 @@ export const CardItem: React.FC<CardItemProps> = ({ card }) => {
       animate={{ opacity: 1, y: 0 }}
       className={`
         relative flex flex-col gap-3 p-4 rounded-xl cursor-grab active:cursor-grabbing
-        bg-white dark:bg-slate-900 border transition-shadow
-        ${isDragging ? 'shadow-2xl border-blue-500' : 'shadow-sm border-slate-200 dark:border-slate-800 hover:shadow-md'}
+        bg-white dark:bg-turkcell-navy border transition-shadow
+        ${isDragging ? 'shadow-2xl border-turkcell-yellow ring-2 ring-turkcell-yellow/30' : 'shadow-sm border-slate-200 dark:border-slate-700 hover:shadow-md'}
       `}
     >
       <p className="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
@@ -63,27 +62,20 @@ export const CardItem: React.FC<CardItemProps> = ({ card }) => {
         </div>
       )}
 
-      <div className="flex items-center justify-between mt-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+      <div className="flex items-center justify-between mt-2 pt-3 border-t border-slate-100 dark:border-slate-700">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold">
-            {card.authorId === 'p1' ? 'A' : (card.authorId === 'p2' ? 'Ay' : 'M')}
+          <div className="w-6 h-6 rounded-full bg-turkcell-yellow/20 text-turkcell-navy flex items-center justify-center text-xs font-bold">
+            {card.authorId === 'p1' ? 'AY' : (card.authorId === 'p2' ? 'AK' : card.authorId === 'p3' ? 'MD' : card.authorId === 'p4' ? 'ZÇ' : 'CÖ')}
           </div>
         </div>
 
         <button
           onClick={handleAnalyzeClick}
-          disabled={isAnalyzing}
           onPointerDown={(e) => e.stopPropagation()}
-          className={`
-            flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all
-            ${isAnalyzing 
-              ? 'bg-purple-100 text-purple-400 cursor-not-allowed' 
-              : 'bg-purple-50 text-purple-600 hover:bg-purple-100 dark:bg-purple-900/20 dark:text-purple-400 dark:hover:bg-purple-900/40'
-            }
-          `}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all bg-turkcell-navy/5 text-turkcell-navy hover:bg-turkcell-navy/10 dark:bg-turkcell-yellow/10 dark:text-turkcell-yellow dark:hover:bg-turkcell-yellow/20"
         >
-          <Sparkles size={14} className={isAnalyzing ? 'animate-pulse' : ''} />
-          {isAnalyzing ? 'Analiz Ediliyor...' : 'AI Çözüm Üret'}
+          <Sparkles size={14} />
+          AI Çözüm Üret
         </button>
       </div>
     </motion.div>

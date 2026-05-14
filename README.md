@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TeamRetro — AI Destekli Sprint Retrospektifi
 
-## Getting Started
+Turkcell temalı, 9 aşamalı retrospektif yönetim aracı. Takım üyeleri isimleriyle giriş yapar, fikir yazar, AI ile gruplar, oy verir ve tartışır. İsteğe bağlı anonim mod ile kartlar isimsiz gönderilebilir.
 
-First, run the development server:
+## Özellikler
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Giriş Ekranı** — İsim/soyad ile toplantıya katılım (kullanıcı dropdown yok)
+- **9 Aşamalı Akış** — Icebreaker → Hoşgeldin → Açık Aksiyonlar → Beyin Fırtınası → Gruplama → Oylama → Tartışma → İnceleme → Kapanış
+- **Anonim Kart Desteği** — Her kart eklerken "Anonim gönder" seçeneği
+- **AI Gruplama** — Fikirleri semantik olarak otomatik kategorize eder
+- **Zamanlayıcı** — Beyin fırtınası (5dk) ve oylama (2dk) için geri sayım
+- **Ses Kaydı & Transkripsiyon** — Tartışma aşamasında sesli not ve AI transkript
+- **AI Analiz** — Tartışma özetleri ve aksiyon önerileri
+- **Oylama** — Kişi başı 6 oy limiti ile önceliklendirme
+- **Turkcell Teması** — Kurumsal renk paleti (#ffc72c, #1a2b3c, #00a0d2)
+
+## Teknoloji
+
+| Katman | Teknoloji |
+|--------|-----------|
+| Framework | Next.js 15, React 19, TypeScript |
+| State | Zustand |
+| Stil | Tailwind CSS 3 |
+| Animasyon | Framer Motion |
+| Ses | WaveSurfer.js |
+| İkon | Lucide React |
+| Sürükle-Bırak | dnd-kit |
+
+## Proje Yapısı
+
+```
+src/
+├── app/                  # Next.js App Router (page, layout, globals)
+├── components/features/
+│   ├── auth/             # LoginView (giriş ekranı)
+│   ├── brainstorm/       # Beyin fırtınası kartları
+│   ├── close/            # Kapanış & geri bildirim
+│   ├── discuss/          # Tartışma & ses kaydı
+│   ├── group/            # AI gruplama
+│   ├── icebreaker/       # Isınma sorusu
+│   ├── open-actions/     # Geçmiş aksiyonlar
+│   ├── review/           # İnceleme & anlaşmalar
+│   ├── vote/             # Oylama
+│   ├── welcome/          # Hoşgeldin ekranı
+│   └── workflow/         # StepIndicator, TimerBar
+├── hooks/                # useAudioRecorder
+├── lib/                  # AI mock (gruplama, transkripsiyon, analiz)
+├── services/             # Mock API
+├── store/                # Zustand store'ları (Card, Retro, Ai, Ui)
+└── types/                # TypeScript tip tanımları
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Kurulum
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Tarayıcıda [http://localhost:3000](http://localhost:3000) adresini açın. İsminizi yazıp toplantıya katılın.
 
-## Learn More
+## Build
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+npm start
+```

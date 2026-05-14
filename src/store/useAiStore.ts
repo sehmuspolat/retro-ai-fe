@@ -30,9 +30,11 @@ export const useAiStore = create<AiState>((set) => ({
           let title = "Yeni Grup";
           if (id === 'g_ai_surec') title = "Süreç & Yöntem";
           else if (id === 'g_ai_teknik') title = "Teknik Borç";
-          else if (id === 'g_ai_iletisim') title = "İletişim";
+          else if (id === 'g_ai_iletisim') title = "İletişim & İşbirliği";
+          else if (id === 'g_ai_kalite') title = "Kalite & Test";
+          else if (id === 'g_ai_planlama') title = "Planlama & Tahminleme";
           
-          newGroups.push({ id, title, createdAt: new Date().toISOString() });
+          newGroups.push({ id, title, category: 'ai-group', createdAt: new Date().toISOString() });
         }
       });
       setGroups(newGroups);

@@ -12,9 +12,12 @@ interface CardState {
   error: string | null;
 
   fetchInitialData: () => Promise<void>;
-  addCard: (content: string, authorId: string, audioUrl?: string) => Promise<void>;
+  addPerson: (name: string, surname: string) => Promise<string | null>;
+  addCard: (content: string, authorId: string, groupId: string, isAnonymous?: boolean, audioUrl?: string) => Promise<void>;
   updateCardsGroup: (mapping: Record<string, string>) => void;
   setGroups: (groups: Group[]) => void;
+  voteCard: (cardId: string, personId: string) => void;
+  unvoteCard: (cardId: string, personId: string) => void;
 }
 
 export const useCardStore = create<CardState>((set) => ({
@@ -48,9 +51,18 @@ export const useCardStore = create<CardState>((set) => ({
     }
   },
 
-  addCard: async (content, authorId, audioUrl) => {
+  addPerson: async (name, surname) => {
+    const response = await api.addPerson(name, surname);
+    if (response.data) {
+      set((state) => ({ persons: [...state.persons, response.data!] }));
+      return response.data.id;
+    }
+    return null;
+  },
+
+  addCard: async (content, authorId, groupId, isAnonymous, audioUrl) => {
     set({ isMutating: true });
-    const response = await api.createCard({ content, authorId, groupId: null, audioUrl });
+    const response = await api.createCard({ content, authorId, groupId, isAnonymous: isAnonymous ?? false, audioUrl });
     
     if (response.data) {
       set((state) => ({ 
@@ -71,4 +83,24 @@ export const useCardStore = create<CardState>((set) => ({
   },
 
   setGroups: (groups) => set({ groups }),
+
+  voteCard: (cardId, personId) => {
+    set((state) => ({
+      cards: state.cards.map(card =>
+        card.id === cardId && !card.voters.includes(personId)
+          ? { ...card, votes: card.votes + 1, voters: [...card.voters, personId] }
+          : card
+      )
+    }));
+  },
+
+  unvoteCard: (cardId, personId) => {
+    set((state) => ({
+      cards: state.cards.map(card =>
+        card.id === cardId && card.voters.includes(personId)
+          ? { ...card, votes: card.votes - 1, voters: card.voters.filter(v => v !== personId) }
+          : card
+      )
+    }));
+  },
 }));
